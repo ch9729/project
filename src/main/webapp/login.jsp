@@ -7,6 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+	<form method="post" action="${pageContext.request.contextPath}/RegisterServlet.do">
+	아이디 : <input type="text"><br>
+	비밀번호 : <input type="password">
+	<input type="submit" value="로그인">
+	</form>
 </body>
 </html>
