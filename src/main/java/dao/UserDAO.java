@@ -1,0 +1,104 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import config.DBConfig;
+import dto.UserDTO;
+
+public class UserDAO {
+	
+	// 회원가입
+	public int insertUser(UserDTO userDTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = -1;
+		
+		try {
+			// mySQL 드라이버
+			Class.forName(DBConfig.DB_DRIVER_NAME);
+			conn = DriverManager.getConnection(DBConfig.DB_URL,
+											   DBConfig.DB_ID,
+											   DBConfig.DB_pwd);
+			
+			String sql = "INSERT INTO user(id, password, name, rrn1, rrn2, phone1, phone2, phone3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userDTO.getId());
+			pstmt.setString(2, userDTO.getPassword());
+			pstmt.setString(3, userDTO.getName());
+			pstmt.setInt(4, userDTO.getRrn1());
+			pstmt.setInt(5, userDTO.getRrn2());
+			pstmt.setInt(6, userDTO.getPhone1());
+			pstmt.setInt(7, userDTO.getPhone2());
+			pstmt.setInt(8, userDTO.getPhone3());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	// 정보 수정
+	public int updateUser(UserDTO userDTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = -1;
+		
+		try {
+			String sql = "UPDATE user SET password=?, name=?, rrn1=?, rrn2=?, phone1=?, phone2=?, phone3 WHERE id=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userDTO.getPassword());
+			pstmt.setString(2, userDTO.getName());
+			pstmt.setInt(3, userDTO.getRrn1());
+			pstmt.setInt(4, userDTO.getRrn2());
+			pstmt.setInt(5, userDTO.getPhone1());
+			pstmt.setInt(6, userDTO.getPhone2());
+			pstmt.setInt(7, userDTO.getPhone3());
+			pstmt.setString(8, userDTO.getId());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	//회원삭제
+	public int deleteUser(UserDTO userDTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = -1;
+		
+		try {
+			String sql = "DELETE FROM user WHERE num=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userDTO.getNum());
+			
+			result = pstmt.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+}
