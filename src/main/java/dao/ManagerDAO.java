@@ -55,12 +55,17 @@ public class ManagerDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		
 		try {
 			Class.forName(DBConfig.DB_DRIVER_NAME);
 			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+			
 			String sql = "SELECT * FROM book";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
+			
+			 if (!rs.isBeforeFirst()) {
+		        }
 			
 			while(rs.next()) {
 				BookDTO book = new BookDTO();
@@ -70,6 +75,7 @@ public class ManagerDAO {
 				book.setAge(rs.getInt("age"));
 				bookList.add(book);
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,25 +83,50 @@ public class ManagerDAO {
 	}
 	
 	//책 추가
-	public boolean addBook(String bname, String bdetail, int age) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			Class.forName(DBConfig.DB_DRIVER_NAME);
-			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
-			String sql = "INSERT INTO book(bname, bdetail, age) VALUES (?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, bname);
-			pstmt.setString(2, bdetail);
-			pstmt.setInt(3, age);
-			int row = pstmt.executeUpdate();
-			return row > 0;
- 		} catch (Exception e) {
- 			e.printStackTrace();
- 		}
-		
-		return false;
+	public BookDTO addBook(String bname, String bdetail, int age) {
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    BookDTO book = null;
+
+	    try {
+	        // 데이터베이스 연결
+	        Class.forName(DBConfig.DB_DRIVER_NAME);
+	        conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+
+	        // SQL 쿼리 작성 및 실행
+	        String sql = "INSERT INTO book(bname, bdetail, age) VALUES (?, ?, ?)";
+	        pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS); // 자동 생성된 키 반환 설정
+	        pstmt.setString(1, bname);
+	        pstmt.setString(2, bdetail);
+	        pstmt.setInt(3, age);
+
+	        int rowsAffected = pstmt.executeUpdate(); // 데이터 삽입 수행
+
+	        // 삽입 성공 시 자동 생성된 키를 가져옴
+	        if (rowsAffected > 0) {
+	            rs = pstmt.getGeneratedKeys(); // 자동 생성된 키(ResultSet) 가져오기
+	            if (rs.next()) {
+	                book = new BookDTO();
+	                book.setBnum(rs.getInt(1)); // 자동 생성된 기본 키 (첫 번째 열)
+	                book.setBname(bname);
+	                book.setBdetail(bdetail);
+	                book.setAge(age);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmt != null) pstmt.close();
+	            if (conn != null) conn.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return book; // 삽입된 책 정보를 담은 BookDTO 객체 반환
 	}
 	
 	//책 삭제

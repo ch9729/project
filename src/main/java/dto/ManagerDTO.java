@@ -5,21 +5,7 @@ public class ManagerDTO {
 	private String id;
 	private String password;
 	private String name;
-	private int userNum;
-	private int bunm;
 	
-	public int getUserNum() {
-		return userNum;
-	}
-	public void setUserNum(int userNum) {
-		this.userNum = userNum;
-	}
-	public int getBunm() {
-		return bunm;
-	}
-	public void setBunm(int bunm) {
-		this.bunm = bunm;
-	}
 	public int getNum() {
 		return num;
 	}

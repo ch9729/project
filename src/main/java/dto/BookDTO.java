@@ -5,8 +5,6 @@ public class BookDTO {
 	private String bname;
 	private String bdetail;
 	private int age;
-	
-	
 
 	public int getBnum() {
 		return bnum;

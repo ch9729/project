@@ -22,22 +22,23 @@
     	<% if(bookList != null) {
     		for(BookDTO book : bookList) {%> 
     	
- <tr>
+ 		<tr>
             <td><%= book.getBnum() %></td>
             <td><%= book.getBname() %></td>
             <td><%= book.getBdetail() %></td>
             <td><%= book.getAge() %></td>
             <td>
-                <a href="editBook.jsp?bnum=<%= book.getBnum() %>">수정</a>
-                <form action="deleteBook" method="post" style="display:inline;">
-                    <input type="hidden" name="bnum" value="<%= book.getBnum() %>">
-                    <button type="submit">삭제</button>
-                </form>
+            	<form method="post" action="deleteBook">
+            		<input type="hidden" name="bnum" value="<%=book.getBnum() %>">
+            		<button type="submit" class="delete-btn">삭제</button>
+            	</form>
             </td>
 
     	</tr>
     	<%}
     		}%>
 	</table>
+	
+	<a href="addBook.jsp" class="add-btn">책 추가</a>
 </body>
 </html>
