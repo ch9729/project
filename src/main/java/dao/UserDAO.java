@@ -130,10 +130,10 @@ public class UserDAO {
 		int result = -1;
 		
 		try {
-			String sql = "DELETE FROM user WHERE num=?";
+			String sql = "DELETE FROM user WHERE userNum=?";
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userDTO.getNum());
+			pstmt.setInt(1, userDTO.getUserNum());
 			
 			result = pstmt.executeUpdate();
 		}catch (Exception e) {
@@ -158,16 +158,11 @@ public class UserDAO {
 			rs = pstmt.executeQuery();
 			 if (rs.next()) {
 				 user = new UserDTO();
-				 user.setNum(rs.getInt("num"));
+				 user.setUserNum(rs.getInt("userNum"));
 				 user.setId(rs.getString("id"));
 				 user.setPassword(rs.getString("password"));
 				 user.setName(rs.getString("name"));
-				 System.out.println(user.getName());
-	                System.out.println("ID: " + id);
-	                System.out.println("Password: " + password);
-	            } else {
-	            	System.out.println("안됨");
-	            }
+	            } 
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }

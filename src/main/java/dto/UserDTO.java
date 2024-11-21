@@ -1,7 +1,7 @@
 package dto;
 
 public class UserDTO {
-	private int num;
+	private int userNum;
 	private String id;
 	private String password;
 	private String name;
@@ -12,11 +12,12 @@ public class UserDTO {
 	private int phone3;
 	
 	
-	public int getNum() {
-		return num;
+	
+	public int getUserNum() {
+		return userNum;
 	}
-	public void setNum(int num) {
-		this.num = num;
+	public void setUserNum(int userNum) {
+		this.userNum = userNum;
 	}
 	public String getId() {
 		return id;

@@ -44,7 +44,8 @@ public class UserController extends HttpServlet{
 		int result = userDAO.insertUser(userDTO);
 		
 		if(result > 0) {
-			req.getRequestDispatcher("main.jsp").forward(req, resp);
+			req.setAttribute("successMessage", "성공적으로 가입되었습니다.");
+			req.getRequestDispatcher("index.jsp").forward(req, resp);
 		} else {
 			resp.getWriter().write("회원가입 실패");
 		}

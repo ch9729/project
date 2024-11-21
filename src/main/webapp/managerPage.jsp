@@ -3,10 +3,8 @@
     pageEncoding="UTF-8"%>
 <%	ManagerDTO manager = (ManagerDTO) session.getAttribute("manager");
 	if(manager == null) {
-		out.println("Manager is not in the session.");
-		//response.sendRedirect("login.jsp");		//세션에 저장된 정보가 없으면 login페이지로 이동
-	}else {
-		out.println("Manager found: " + manager.getName());
+		response.sendRedirect("login.jsp");		//세션에 저장된 정보가 없으면 login페이지로 이동
+		return;
 	}
  %>
 <!DOCTYPE html>
@@ -16,6 +14,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h2><%= manager.getName() %></h2>
+	<h2><%= manager.getName() %>님 로그인 입니다.</h2>
+	<a href="./bookInfo.jsp"><button>책 정보</button></a>
+	<a href="./userInfo.jsp"><button>회원정보</button></a>
 </body>
 </html>

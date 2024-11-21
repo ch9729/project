@@ -1,17 +1,18 @@
 package dto;
 
 public class BookDTO {
-	private int num;
+	private int bnum;
 	private String bname;
 	private String bdetail;
 	private int age;
 	
 	
-	public int getNum() {
-		return num;
+
+	public int getBnum() {
+		return bnum;
 	}
-	public void setNum(int num) {
-		this.num = num;
+	public void setBnum(int bnum) {
+		this.bnum = bnum;
 	}
 	public String getBname() {
 		return bname;

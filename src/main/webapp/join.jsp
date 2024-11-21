@@ -52,6 +52,9 @@
 	 			return false;
 	 		}return true;
 	 	}
+	 	if (request.getAttribute("successMessage") != null) {
+	 		alert("<%= request.getAttribute("successMessage") %>");
+	 	}
 	 </script>
 </body>
 </html>

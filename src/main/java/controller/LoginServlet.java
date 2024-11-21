@@ -20,11 +20,10 @@ public class LoginServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
         String password = req.getParameter("password");
-        
         ManagerDAO managerDAO = new ManagerDAO();
         ManagerDTO manager = managerDAO.getManagerLogin(id, password);
         
-        // 로그인 성공
+        // 관리자 로그인 성공
         if(manager != null) {	
         	HttpSession session = req.getSession();    
         	session.setAttribute("manager", manager);	// 세션에 관리자 저장
@@ -35,7 +34,7 @@ public class LoginServlet extends HttpServlet{
         UserDAO userDAO = new UserDAO();
         UserDTO user = userDAO.getUserLogin(id, password);
         
-        // 로그인 성공
+        // 회원 로그인 성공
         if(user != null) {	
         	HttpSession session = req.getSession();  
         	session.setAttribute("user", user);		// 세션에 관리자 저장
