@@ -19,10 +19,25 @@
         	<th>책 제목</th>
         	<th>권장 연령</th>
     	</tr>
-    	<%  %>
-    	<tr>
-    		<%= manager.getName() %>
+    	<% if(bookList != null) {
+    		for(BookDTO book : bookList) {%> 
+    	
+ <tr>
+            <td><%= book.getBnum() %></td>
+            <td><%= book.getBname() %></td>
+            <td><%= book.getBdetail() %></td>
+            <td><%= book.getAge() %></td>
+            <td>
+                <a href="editBook.jsp?bnum=<%= book.getBnum() %>">수정</a>
+                <form action="deleteBook" method="post" style="display:inline;">
+                    <input type="hidden" name="bnum" value="<%= book.getBnum() %>">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+
     	</tr>
+    	<%}
+    		}%>
 	</table>
 </body>
 </html>
