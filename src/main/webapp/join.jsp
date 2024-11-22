@@ -80,26 +80,10 @@
 </style>
 </head>
 <body>
-	<%-- <form method="post" action="${pageContext.request.contextPath}/RegisterServlet.do" onsubmit="return validateForm(this);">
-		아이디 : <input type="text" name="id"><br>
-		패스워드 : <input type="password" name="password"><br>
-		이름 : <input type="text" name="name"><br>
-		주민등록번호 : <input type="text" name="rrn1"> - <input type="text" name="rrn2"><br>
-		휴대번호 : <select name="phone1">
-		<option value="010" selected="010">010</option>
-		<option value="011">011</option>
-		<option value="016">016</option>
-		<option value="017">017</option>
-		<option value="018">018</option>
-		<option value="019">019</option>
-		</select> -
-		<input type="text" name="phone2"> - <input type="text" name="phone3"><br>
-		<input type="submit" value="회원가입" >	
-	</form> --%>
-	
+
 	<div class="form-container">
         <h1>회원가입</h1>
-        <form method="post" action="${pageContext.request.contextPath}/RegisterServlet.do" onsubmit="return validateForm(this);">
+        <form method="post" action="${pageContext.request.contextPath}/JoinServlet" onsubmit="return validateForm(this);">
             <label for="id">아이디:</label>
             <input type="text" id="id" name="id" placeholder="아이디를 입력하세요">
 

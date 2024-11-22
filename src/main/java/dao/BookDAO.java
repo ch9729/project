@@ -15,62 +15,56 @@ public class BookDAO {
 	
 	//전체 조회
 	public int selectCount(Map<String, Object> map) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int totalCount = 0;
-		
-		try {
-			Class.forName(DBConfig.DB_DRIVER_NAME);
-			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
-			String sql = "SELECT COUNT(*) FROM book";
-			if(map.get("searchWord") != null) {
-				sql += " WHERE " + map.get("searchField") + " LIKE '%" + map.get("searchWord") + "%'";
-				pstmt = conn.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				rs.next();
-				totalCount = rs.getInt(1);
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return totalCount;
+	    int totalCount = 0;
+	    String sql = "SELECT COUNT(*) FROM book WHERE booking_yn = 0"; // 기본 조건
+
+	    if (map != null && map.get("searchWord") != null) {
+	        sql += " AND " + map.get("searchField") + " LIKE ?"; // 검색 조건 추가
+	    }
+
+	    try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
+	        if (map != null && map.get("searchWord") != null) {
+	            pstmt.setString(1, "%" + map.get("searchWord") + "%"); // 파라미터 바인딩
+	        }
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                totalCount = rs.getInt(1); // 총 카운트 값
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return totalCount;
 	}
 	
 	public List<BookDTO> selectList(Map<String, Object> param) {
+	    String sql = "SELECT bnum, bname, bdetail, age, booking_yn FROM book WHERE booking_yn = 0"; // 기본 조건
+	    if (param != null && param.get("searchWord") != null) {
+	        sql += " AND " + param.get("searchField") + " LIKE ?"; // 검색 조건 추가
+	    }
+
 	    List<BookDTO> bookList = new ArrayList<>();
-	    Connection conn = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-
-	    try {
-	        conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
-	        StringBuilder sql = new StringBuilder();
-	        sql.append("SELECT bnum, bname, bdetail, age FROM book"); // book은 테이블 이름
-
-	        // 검색 조건이 있는 경우
-	        if (param != null && param.get("searchWord") != null) {
-	            sql.append(" WHERE ").append(param.get("searchField")).append(" LIKE ?");
-	        }
-
-	        pstmt = conn.prepareStatement(sql.toString());
-
-	        // 검색 조건 파라미터 설정
+	    try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
 	        if (param != null && param.get("searchWord") != null) {
 	            pstmt.setString(1, "%" + param.get("searchWord") + "%");
 	        }
 
-	        rs = pstmt.executeQuery();
-
-	        // 결과를 BookDTO 객체에 저장
-	        while (rs.next()) {
-	            BookDTO dto = new BookDTO();
-	            dto.setBnum(rs.getInt("bnum"));
-	            dto.setBname(rs.getString("bname"));
-	            dto.setBdetail(rs.getString("bdetail"));
-	            dto.setAge(rs.getInt("age"));
-	            bookList.add(dto);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                BookDTO book = new BookDTO();
+	                book.setBnum(rs.getInt("bnum"));
+	                book.setBname(rs.getString("bname"));
+	                book.setBdetail(rs.getString("bdetail"));
+	                book.setAge(rs.getInt("age"));
+	                book.setBooking_yn(rs.getInt("booking_yn"));
+	                bookList.add(book);
+	            }
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();

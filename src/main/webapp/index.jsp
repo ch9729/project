@@ -64,8 +64,8 @@
 </head>
 <body>
 	<div class="button-container">
-		<a href="./join.jsp" class="btn1"> <button> 회원가입 </button></a>
-		<a href="./login.jsp"><button>로그인</button></a>
+		<a href="JoinServlet" class="btn1"> <button> 회원가입 </button></a>
+		<a href="LoginServlet.do"><button>로그인</button></a>
 	</div>
 </body>
 </html>

@@ -12,6 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/addBook")
 public class BookAddServlet extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("addBook.jsp").forward(req, resp);
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -22,8 +27,7 @@ public class BookAddServlet extends HttpServlet{
 		BookDTO dto = new BookDTO();
 		
 		dto = dao.addBook(bname, bdetail, age);
+		resp.sendRedirect("bookList");
 	}
-	
-	
 
 }

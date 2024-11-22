@@ -16,6 +16,12 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/LoginServlet.do")
 public class LoginServlet extends HttpServlet{
 
+	   @Override
+	    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	        // GET 요청 처리: 로그인 페이지로 이동
+	        req.getRequestDispatcher("login.jsp").forward(req, resp);
+	    }
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String id = req.getParameter("id");
@@ -27,7 +33,7 @@ public class LoginServlet extends HttpServlet{
         if(manager != null) {	
         	HttpSession session = req.getSession();    
         	session.setAttribute("manager", manager);	// 세션에 관리자 저장
-        	resp.sendRedirect("managerPage.jsp");		//해당 페이지로 이동
+        	resp.sendRedirect("ManagerPage");		//해당 페이지로 이동
         			return;
         }
         
@@ -38,7 +44,7 @@ public class LoginServlet extends HttpServlet{
         if(user != null) {	
         	HttpSession session = req.getSession();  
         	session.setAttribute("user", user);		// 세션에 관리자 저장
-        	resp.sendRedirect("userPage.jsp");		//해당 페이지로 이동
+        	resp.sendRedirect("UserPage");		//해당 페이지로 이동
         			return;
         }
 	}

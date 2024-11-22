@@ -2,8 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import org.apache.catalina.User;
-
 import dao.UserDAO;
 import dto.UserDTO;
 import jakarta.servlet.ServletException;
@@ -12,10 +10,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/RegisterServlet.do")
-public class UserController extends HttpServlet{
+@WebServlet("/JoinServlet")
+public class JoinServlet extends HttpServlet{
 
-	private static final long serialVersionUID = 1L;
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.getRequestDispatcher("join.jsp").forward(req, resp);
+		
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,4 +54,5 @@ public class UserController extends HttpServlet{
 	}
 	
 	
+
 }

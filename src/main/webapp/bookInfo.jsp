@@ -1,3 +1,6 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="dao.BookDAO"%>
 <%@page import="dto.BookDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="dao.ManagerDAO"%>
@@ -5,6 +8,10 @@
     pageEncoding="UTF-8"%>
 <%
 	List<BookDTO> bookList = (List<BookDTO>) request.getAttribute("bookList");
+
+	BookDAO dao = new BookDAO();
+	Map<String, Object> param = new HashMap<String, Object>();
+	int totalCount = dao.selectCount(param);
 %>
 <!DOCTYPE html>
 <html>
@@ -20,12 +27,12 @@
         	<th>권장 연령</th>
     	</tr>
     	<% if(bookList != null) {
+    		int virtualNum = totalCount;
     		for(BookDTO book : bookList) {%> 
     	
  		<tr>
-            <td><%= book.getBnum() %></td>
+            <td><%= virtualNum++ %></td>
             <td><%= book.getBname() %></td>
-            <td><%= book.getBdetail() %></td>
             <td><%= book.getAge() %></td>
             <td>
             	<form method="post" action="deleteBook">
@@ -38,7 +45,10 @@
     	<%}
     		}%>
 	</table>
+	<form method="get" action="${pageContext.request.contextPath}/addBook">
+		<!-- <input type="hidden" name="age" value=""> -->
+		<button type="submit" class="add-btn">책 추가</button>
+	</form>
 	
-	<a href="addBook.jsp" class="add-btn">책 추가</a>
 </body>
 </html>

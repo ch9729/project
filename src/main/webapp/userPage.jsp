@@ -20,65 +20,76 @@
  		param.put("searchField", searchField);
  		param.put("searchWord", searchWord);
  	}
- 	
  	int totalCount = dao.selectCount(param);
  	List<BookDTO> bookLists = dao.selectList(param);
  	//dao.close();
  %>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<h2><%= user.getName() %>님 안녕하세요</h2>
-	<a href="./edit.jsp"> <button> 회원수정 </button></a>
-	<a href="./join.jsp"> <button> 회원삭제 </button></a>
-	
-	
-	<form method="get">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<h2><%= user.getName() %>님 안녕하세요</h2>
+		<a href="./edit.jsp"> <button> 회원수정 </button></a>
+		<a href="./join.jsp"> <button> 회원삭제 </button></a>
+		<a href="./join.jsp"> <button> 대여한 책 </button></a>
+		
+		
+		<form method="get">
+			<table border="1" width="90%">
+				<tr>
+					<td align="center">
+						<input type="text" name="searchWord" />
+					<input type="submit" value="검색하기" />
+					</td>
+				</tr>
+			</table>	
+		</form>
+		
 		<table border="1" width="90%">
 			<tr>
-				<td align="center">
-					<input type="text" name="searchWord" />
-				<input type="submit" value="검색하기" />
-				</td>
+				<th width="80%">제목</th>
+				<th width="10%">연령</th>
+				<th width="10%">대여희망</th>
 			</tr>
-		</table>	
-	</form>
-	
-	<table border="1" width="90%">
-		<tr>
-			<th width="15%">번호</th>
-			<th width="70%">제목</th>
-			<th width="15%">연령</th>
-		</tr>
-		
-<%
-if (bookLists != null && !bookLists.isEmpty()) {
-    int virtualNum = totalCount; // 게시물 번호 시작값
-    for (BookDTO dto : bookLists) {
-%>
-<tr align="center">
-    <td><%= virtualNum++ %></td> <!-- 게시물 번호 -->
-    <td align="left">
-        <a href="View.jsp?num=<%= dto.getBnum() %>"><%= dto.getBname() %></a> <!-- 제목 -->
-    </td>
-    <td align="center"><%= dto.getAge() %></td> <!-- 연령 -->
-</tr>
-<%
-    }
-} else {
-%>
-<tr>
-    <td colspan="3" align="center">등록된 책이 없습니다.</td>
-</tr>
-<%
-}
-%>
-</table>
-	
-	
-</body>
+			
+			<%
+				if (bookLists != null && !bookLists.isEmpty()) {
+	    		int virtualNum = totalCount; // 게시물 번호 시작값
+	    		
+	    		for (BookDTO dto : bookLists) {
+	    			if(dto.getBooking_yn()==1) {
+	    				continue;
+	    			}
+			%>
+			<tr align="center">
+	    		<td align="center">
+	        		<%= dto.getBname() %> <!-- 제목 -->
+	    		</td>
+	    		<td align="center"><%= dto.getAge() %></td> <!-- 연령 -->
+	    		<td><button type="button" onclick="confirmRental(<%= dto.getBnum() %>)">대여</button></td>
+			</tr>
+			<%
+	    		}
+				} else {
+			%>
+			<tr>
+	    		<td colspan="3" align="center">등록된 책이 없습니다.</td>
+			</tr>
+			<%
+				}
+			%>
+		</table>
+		<script>
+			function confirmRental(bookId) {
+				if(confirm("대여하시겠습니까?")) {
+					window.location.href = `rentalServlet?bnum=${bookId}`;
+				}  else {
+					return false;
+				}
+			}
+		</script>
+	</body>
 </html>

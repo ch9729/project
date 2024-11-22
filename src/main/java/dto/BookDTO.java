@@ -5,7 +5,14 @@ public class BookDTO {
 	private String bname;
 	private String bdetail;
 	private int age;
+	private int booking_yn;
 
+	public int getBooking_yn() {
+		return booking_yn;
+	}
+	public void setBooking_yn(int booking_yn) {
+		this.booking_yn = booking_yn;
+	}
 	public int getBnum() {
 		return bnum;
 	}

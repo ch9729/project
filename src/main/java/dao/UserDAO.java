@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import config.DBConfig;
+import dto.BookDTO;
 import dto.ManagerDTO;
 import dto.UserDTO;
 
@@ -168,4 +171,63 @@ public class UserDAO {
 	        }
 			return user;
 		}
+	
+	//책 대여
+	public boolean rentBook(int userNum, int bnum) {
+		Connection conn = null;
+		PreparedStatement updatePstmt = null;
+		PreparedStatement rentalPstmt = null;
+
+		try {
+			String updateSql = "UPDATE book SET booking_yn=1 WHERE bnum=? AND booking_yn=0";
+			String rentalSql = "INSERT INTO rental(userNum, bnum, rantalStart) VALUES (?, ?, NOW())";
+			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+			updatePstmt = conn.prepareStatement(updateSql);
+			rentalPstmt = conn.prepareStatement(rentalSql);
+			
+			updatePstmt.setInt(1, bnum);
+			
+			int updated = updatePstmt.executeUpdate();
+			
+			if(updated > 0) {
+				rentalPstmt.setInt(1, userNum);
+				rentalPstmt.setInt(2, bnum);
+				int rental = rentalPstmt.executeUpdate();
+				return rental > 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	//대여 한 목록
+	public List<BookDTO> getRentalBooks(int userNum) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<BookDTO> rentalBooks = new ArrayList<>();
+		
+		try {
+			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+			String sql = "SELECT book.bnum, book.bname, book.bdetail, book.age FROM book JOIN rental ON book.bnum = rental.bnum WHERE rental.userNum=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNum);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BookDTO book = new BookDTO();
+				book.setBnum(rs.getInt("userNum"));
+				book.setBname(rs.getString("bname"));
+				book.setBdetail(rs.getString("bdetail"));
+				book.setAge(rs.getInt("age"));
+				rentalBooks.add(book);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rentalBooks;
+		
+	}
 }
