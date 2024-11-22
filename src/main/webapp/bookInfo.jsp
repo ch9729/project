@@ -8,10 +8,6 @@
     pageEncoding="UTF-8"%>
 <%
 	List<BookDTO> bookList = (List<BookDTO>) request.getAttribute("bookList");
-
-	BookDAO dao = new BookDAO();
-	Map<String, Object> param = new HashMap<String, Object>();
-	int totalCount = dao.selectCount(param);
 %>
 <!DOCTYPE html>
 <html>
@@ -22,16 +18,13 @@
 <body>
 	<table>
 		<tr>
-        	<th>번호</th>
         	<th>책 제목</th>
         	<th>권장 연령</th>
     	</tr>
     	<% if(bookList != null) {
-    		int virtualNum = totalCount;
     		for(BookDTO book : bookList) {%> 
     	
  		<tr>
-            <td><%= virtualNum++ %></td>
             <td><%= book.getBname() %></td>
             <td><%= book.getAge() %></td>
             <td>
