@@ -24,6 +24,7 @@
  	List<BookDTO> bookLists = dao.selectList(param);
  	//dao.close();
  %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -32,21 +33,19 @@
 	</head>
 	<body>
 		<h2><%= user.getName() %>님 안녕하세요</h2>
-		<a href="./edit.jsp"> <button> 회원수정 </button></a>
-		<a href="./join.jsp"> <button> 회원삭제 </button></a>
-		<a href="./join.jsp"> <button> 대여한 책 </button></a>
+		<a href="editInfo"> <button> 회원수정 </button></a>
+		<a href="#" onclick="deleteUser();"> <button> 회원삭제 </button></a>
+		<a href="rentalChart"> <button> 대여한 책 </button></a>
 		
 		
 		<form method="get">
-			<table border="1" width="90%">
-				<tr>
-					<td align="center">
-						<input type="text" name="searchWord" />
-					<input type="submit" value="검색하기" />
-					</td>
-				</tr>
-			</table>	
-		</form>
+    <select name="searchField" required>
+        <option value="bname" selected>책 제목</option>
+        <option value="bdetail">책 설명</option>
+    </select>
+    <input type="text" name="searchWord" placeholder="검색어를 입력하세요" required />
+    <input type="submit" value="검색하기" />
+</form>
 		
 		<table border="1" width="90%">
 			<tr>
@@ -64,7 +63,7 @@
 	    				continue;
 	    			}
 			%>
-			<tr align="center">
+			<tr data-id="<%= dto.getBnum() %>" align="center">
 	    		<td align="center">
 	        		<%= dto.getBname() %> <!-- 제목 -->
 	    		</td>
@@ -81,15 +80,36 @@
 			<%
 				}
 			%>
+			
+			
+			
 		</table>
 		<script>
-			function confirmRental(bookId) {
-				if(confirm("대여하시겠습니까?")) {
-					window.location.href = `rentalServlet?bnum=${bookId}`;
-				}  else {
-					return false;
+		function confirmRental(bookId) {
+	        if (confirm("대여하시겠습니까?")) {
+	            //window.location.href = `rentServlet?bnum=`+ bookId;
+	            fetch("rentServlet?bnum=" + bookId, {
+	            	method: "GET"
+	            })
+	            .then(response => response.text())
+	            .then(result => {
+	            	if(result.trim() === "success") {
+	            		alert("대여가 되었습니다.");
+	            		 document.querySelector(`tr[data-id="${bookId}"]`).style.display = "none";
+	            	}
+	            })
+	        } else {
+	            return false;
+	        }
+	    }
+		
+			function deleteUser() {
+				if(confirm("정말 삭제하시겠습니까?")) {
+					window.location.href = "deleteInfo"
 				}
 			}
+			
+			
 		</script>
 	</body>
 </html>

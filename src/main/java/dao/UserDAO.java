@@ -102,18 +102,14 @@ public class UserDAO {
 	        conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
 
 	        // SQL 업데이트 쿼리
-	        String sql = "UPDATE user SET password=?, name=?, rrn1=?, rrn2=?, phone1=?, phone2=?, phone3 WHERE id=?";
+	        String sql = "UPDATE user SET password=?, phone2=?, phone3=? WHERE id=?";
 	        pstmt = conn.prepareStatement(sql);
 
 	        // ?에 값 설정
 	        pstmt.setString(1, userDTO.getPassword());
-	        pstmt.setString(2, userDTO.getName());
-	        pstmt.setInt(3, userDTO.getRrn1());
-	        pstmt.setInt(4, userDTO.getRrn2());
-	        pstmt.setInt(5, userDTO.getPhone1());
-	        pstmt.setInt(6, userDTO.getPhone2());
-	        pstmt.setInt(7, userDTO.getPhone3());
-	        pstmt.setString(8, userDTO.getId());
+	        pstmt.setInt(2, userDTO.getPhone2());
+	        pstmt.setInt(3, userDTO.getPhone3());
+	        pstmt.setString(4, userDTO.getId());
 
 	        // 쿼리 실행 및 결과 저장
 	        result = pstmt.executeUpdate();
@@ -133,6 +129,7 @@ public class UserDAO {
 		int result = -1;
 		
 		try {
+			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
 			String sql = "DELETE FROM user WHERE userNum=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -180,7 +177,7 @@ public class UserDAO {
 
 		try {
 			String updateSql = "UPDATE book SET booking_yn=1 WHERE bnum=? AND booking_yn=0";
-			String rentalSql = "INSERT INTO rental(userNum, bnum, rantalStart) VALUES (?, ?, NOW())";
+			String rentalSql = "INSERT INTO rental(userNum, bnum, rentalStart) VALUES (?, ?, NOW())";
 			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
 			updatePstmt = conn.prepareStatement(updateSql);
 			rentalPstmt = conn.prepareStatement(rentalSql);
@@ -217,7 +214,7 @@ public class UserDAO {
 			
 			while(rs.next()) {
 				BookDTO book = new BookDTO();
-				book.setBnum(rs.getInt("userNum"));
+				book.setBnum(rs.getInt("bnum"));
 				book.setBname(rs.getString("bname"));
 				book.setBdetail(rs.getString("bdetail"));
 				book.setAge(rs.getInt("age"));
@@ -229,5 +226,33 @@ public class UserDAO {
 		}
 		return rentalBooks;
 		
+	}
+	
+	//대여 반납
+	public int returnRental(int rentalNum, int bnum) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement updatePstmt = null;
+		PreparedStatement rentalPstmt = null;
+		
+		
+		try {
+			Class.forName(DBConfig.DB_DRIVER_NAME);
+			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+			String updateSql = "UPDATE book SET booking_yn=0 WHERE bnum=? AND booking_yn=0;";
+			String rentalSql = "DELETE FROM rental WHERE rentalNum=?";
+			
+			updatePstmt = conn.prepareStatement(updateSql);
+			updatePstmt.setInt(1, bnum);
+			updatePstmt.executeUpdate();
+			
+			rentalPstmt = conn.prepareStatement(rentalSql);
+			rentalPstmt.setInt(1, rentalNum);
+			result = rentalPstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

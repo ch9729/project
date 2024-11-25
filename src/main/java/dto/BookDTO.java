@@ -37,5 +37,15 @@ public class BookDTO {
 	public void setAge(int age) {
 		this.age = age;
 	}
+	@Override
+	public String toString() {
+		return "BookDTO{" +
+                "bnum=" + bnum +
+                ", bname='" + bname + '\'' +
+                ", bdetail='" + bdetail + '\'' +
+                ", age=" + age +
+                '}';
+	}
 
+	
 }
