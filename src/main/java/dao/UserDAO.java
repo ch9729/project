@@ -10,6 +10,7 @@ import java.util.List;
 import config.DBConfig;
 import dto.BookDTO;
 import dto.ManagerDTO;
+import dto.RentalDTO;
 import dto.UserDTO;
 
 public class UserDAO {
@@ -199,34 +200,71 @@ public class UserDAO {
 	}
 	
 	//대여 한 목록
-	public List<BookDTO> getRentalBooks(int userNum) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<BookDTO> rentalBooks = new ArrayList<>();
-		
-		try {
-			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
-			String sql = "SELECT book.bnum, book.bname, book.bdetail, book.age FROM book JOIN rental ON book.bnum = rental.bnum WHERE rental.userNum=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNum);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				BookDTO book = new BookDTO();
-				book.setBnum(rs.getInt("bnum"));
-				book.setBname(rs.getString("bname"));
-				book.setBdetail(rs.getString("bdetail"));
-				book.setAge(rs.getInt("age"));
-				rentalBooks.add(book);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return rentalBooks;
-		
+//	public List<BookDTO> getRentalBooks(int userNum) {
+//		Connection conn = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		List<BookDTO> rentalBooks = new ArrayList<>();
+//		
+//		try {
+//			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+//			String sql = "SELECT book.bnum, book.bname, book.bdetail, book.age FROM book JOIN rental ON book.bnum = rental.bnum WHERE rental.userNum=?";
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setInt(1, userNum);
+//			rs = pstmt.executeQuery();
+//			
+//			while(rs.next()) {
+//				BookDTO book = new BookDTO();
+//				book.setBnum(rs.getInt("bnum"));
+//				book.setBname(rs.getString("bname"));
+//				book.setBdetail(rs.getString("bdetail"));
+//				book.setAge(rs.getInt("age"));
+//				rentalBooks.add(book);
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return rentalBooks;
+//		
+//	}
+	public List<RentalDTO> getRentalBooks(int userNum) {
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    List<RentalDTO> rentalBooks = new ArrayList<>();
+
+	    try {
+	        conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
+	        String sql = "SELECT rental.rentalNum, book.bnum, book.bname, book.bdetail, book.age " +
+	                     "FROM rental JOIN book ON rental.bnum = book.bnum WHERE rental.userNum=?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, userNum);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            RentalDTO rental = new RentalDTO();
+	            rental.setRentalNum(rs.getInt("rentalNum"));
+
+	            BookDTO book = new BookDTO();
+	            book.setBnum(rs.getInt("bnum"));
+	            book.setBname(rs.getString("bname"));
+	            book.setBdetail(rs.getString("bdetail"));
+	            book.setAge(rs.getInt("age"));
+
+	            rental.setBook(book);
+	            rentalBooks.add(rental);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+	        try { if (pstmt != null) pstmt.close(); } catch (Exception e) {}
+	        try { if (conn != null) conn.close(); } catch (Exception e) {}
+	    }
+	    return rentalBooks;
 	}
+
 	
 	//대여 반납
 	public int returnRental(int rentalNum, int bnum) {
@@ -239,7 +277,7 @@ public class UserDAO {
 		try {
 			Class.forName(DBConfig.DB_DRIVER_NAME);
 			conn = DriverManager.getConnection(DBConfig.DB_URL, DBConfig.DB_ID, DBConfig.DB_pwd);
-			String updateSql = "UPDATE book SET booking_yn=0 WHERE bnum=? AND booking_yn=0;";
+			String updateSql = "UPDATE book SET booking_yn=0 WHERE bnum=? AND booking_yn=1;";
 			String rentalSql = "DELETE FROM rental WHERE rentalNum=?";
 			
 			updatePstmt = conn.prepareStatement(updateSql);

@@ -20,18 +20,30 @@ public class RentServlet extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		UserDTO user = (UserDTO) session.getAttribute("user");
-		String bnumParam = req.getParameter("bnum");
-		
-		int bnum = Integer.parseInt(bnumParam);
-		
-		int userNum = user.getUserNum();
-		
-		UserDAO dao = new UserDAO();
-		boolean success = dao.rentBook(userNum, bnum);
+		 HttpSession session = req.getSession();
+	        UserDTO user = (UserDTO) session.getAttribute("user");
 
-		resp.sendRedirect("UserPage");
+	        if (user == null) {
+	            resp.getWriter().write("failed");
+	            return;
+	        }
+
+	        String bnumParam = req.getParameter("bnum");
+	        if (bnumParam == null || bnumParam.isEmpty()) {
+	            resp.getWriter().write("failed");
+	            return;
+	        }
+
+	        int bnum = Integer.parseInt(bnumParam);
+	        int userNum = user.getUserNum();
+
+	        UserDAO dao = new UserDAO();
+	        boolean success = dao.rentBook(userNum, bnum);
+
+	        if (success) {
+	            resp.getWriter().write("success");
+	        } else {
+	            resp.getWriter().write("failed");
+	        }
+	    }
 	}
-	
-}

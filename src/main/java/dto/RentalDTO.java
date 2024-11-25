@@ -7,6 +7,13 @@ public class RentalDTO {
 	private int rentalNum;
 	private int userNum;
 	private int bnum;
+	private BookDTO book;
+	public BookDTO getBook() {
+		return book;
+	}
+	public void setBook(BookDTO book) {
+		this.book = book;
+	}
 	private LocalTime rentalStart;	//대여일
 	private LocalTime rentalEnd;	//반납 예정일
 	private LocalTime returnDate;	//반납일

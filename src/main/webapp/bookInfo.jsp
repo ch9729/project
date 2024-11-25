@@ -7,41 +7,135 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	List<BookDTO> bookList = (List<BookDTO>) request.getAttribute("bookList");
+    List<BookDTO> bookList = (List<BookDTO>) request.getAttribute("bookList");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>책 목록 관리</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url("./img/main.jpg");
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 80%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    table th {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #d3e3fd;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .add-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .back-btn {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+</style>
 </head>
 <body>
-	<table>
-		<tr>
-        	<th>책 제목</th>
-        	<th>권장 연령</th>
-    	</tr>
-    	<% if(bookList != null) {
-    		for(BookDTO book : bookList) {%> 
-    	
- 		<tr>
-            <td><%= book.getBname() %></td>
-            <td><%= book.getAge() %></td>
-            <td>
-            	<form method="post" action="deleteBook">
-            		<input type="hidden" name="bnum" value="<%=book.getBnum() %>">
-            		<button type="submit" class="delete-btn">삭제</button>
-            	</form>
-            </td>
-
-    	</tr>
-    	<%}
-    		}%>
-	</table>
-	<form method="get" action="${pageContext.request.contextPath}/addBook">
-		<!-- <input type="hidden" name="age" value=""> -->
-		<button type="submit" class="add-btn">책 추가</button>
-	</form>
-	
+    <div class="container">
+        <h1>책 목록 관리</h1>
+        <div class="action-buttons">
+            <a href="ManagerPage"><button class="btn back-btn">이전 페이지로</button></a>
+        </div>
+        <table>
+            <tr>
+                <th>책 제목</th>
+                <th>권장 연령</th>
+                <th>작업</th>
+            </tr>
+            <% if (bookList != null) {
+                for (BookDTO book : bookList) { %> 
+            <tr>
+                <td><%= book.getBname() %></td>
+                <td><%= book.getAge() %></td>
+                <td>
+                    <form method="post" action="deleteBook" style="margin: 0;">
+                        <input type="hidden" name="bnum" value="<%= book.getBnum() %>">
+                        <button type="submit" class="btn delete-btn">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <% }
+            } else { %>
+            <tr>
+                <td colspan="3">등록된 책이 없습니다.</td>
+            </tr>
+            <% } %>
+        </table>
+        <form method="get" action="${pageContext.request.contextPath}/addBook">
+            <button type="submit" class="btn add-btn">책 추가</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -71,4 +71,33 @@ public class BookDAO {
 	    }
 	    return bookList;
 	}
+	
+	//상세 책 내용
+	public BookDTO getBookDetail(int bnum) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BookDTO book = null;
+		
+		try {
+			Class.forName(DBConfig.DB_DRIVER_NAME);
+			conn = DriverManager.getConnection(DBConfig.DB_URL,
+											   DBConfig.DB_ID,
+											   DBConfig.DB_pwd);
+			String sql = "SELECT * FROM book WHERE bnum=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bnum);
+			 rs = pstmt.executeQuery();
+		        if (rs.next()) {
+		            book = new BookDTO();
+		            book.setBnum(rs.getInt("bnum"));
+		            book.setBname(rs.getString("bname"));
+		            book.setBdetail(rs.getString("bdetail"));
+		            book.setAge(rs.getInt("age"));
+		        }			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return book;
+	}
 }

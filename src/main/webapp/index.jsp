@@ -15,13 +15,13 @@
 		
 		body {
 			background-image: url("./img/main.jpg");
-			background-size: cover;           /* 배경 이미지가 화면에 맞게 조정 */
-			background-repeat: no-repeat;     /* 이미지 반복 방지 */
-			height: 100vh;                    /* 화면 전체 높이 */
-			display: flex;                    /* 플렉스 박스 사용 */
-			justify-content: center;          /* 수평 정렬 */
-			align-items: center;              /* 수직 정렬 */
-			position: relative;               /* 오버레이를 위한 위치 지정 */
+			background-size: cover;           
+			background-repeat: no-repeat;     
+			height: 100vh;                    
+			display: flex;                    
+			justify-content: center;          
+			align-items: center;              
+			position: relative;               
 		}
 		
 		body::before {
@@ -31,33 +31,33 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(255, 255, 255, 0.2); /* 흰색 반투명 오버레이 */
-			z-index: 1; /* 배경 이미지 위에 위치 */
-			pointer-events: none; /* 클릭 이벤트 방지 */
+			background-color: rgba(255, 255, 255, 0.2); 
+			z-index: 1; 
+			pointer-events: none; 
 		}
 		
 		.button-container {
 			position: relative;
-			z-index: 2; /* 버튼을 오버레이 위로 가져오기 */
+			z-index: 2; 
 			text-align: center;
 		}
 		
 		.button-container a button {
-			width: 300px;          /* 버튼 너비 */
-			height: 300px;          /* 버튼 높이 */
-			margin: 20px;          /* 버튼 간격 */
-			font-size: 30px;       /* 버튼 텍스트 크기 */
-			background-color: #d3e3fd; /* 버튼 배경색 */
-			color: black;          /* 버튼 텍스트 색상 */
-			border: none;          /* 버튼 테두리 제거 */
-			border-radius: 8px;    /* 버튼 모서리 둥글게 */
-			cursor: pointer;       /* 마우스 포인터 변경 */
-			transition: all 0.3s;  /* 애니메이션 효과 */
+			width: 300px;          
+			height: 300px;          
+			margin: 20px;          
+			font-size: 30px;       
+			background-color: #d3e3fd; 
+			color: black;          
+			border: none;          
+			border-radius: 8px;    
+			cursor: pointer;       
+			transition: all 0.3s;  
 		}
 		
 		.button-container a button:hover {
-			background-color: #45a049; /* 호버 시 색상 */
-			transform: scale(1.1);     /* 호버 시 크기 확대 */
+			background-color: #45a049; 
+			transform: scale(1.1);     
 		}
 		
 	</style>
